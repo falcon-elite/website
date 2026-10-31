@@ -136,7 +136,9 @@
 
   /* SOCIAL */
   .social{border-bottom:1px solid var(--line)}
-  .social-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:start}
+  .social-grid{display:grid;grid-template-columns:1fr;gap:1.5rem}
+  .social-grid>*,.panel{min-width:0}
+  .ig-posts{max-width:100%}
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
   .tile{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--ink-2);border:1px solid var(--line);display:block;text-decoration:none}
   .tile img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
@@ -146,12 +148,20 @@
   .tile.ph:nth-child(even){background:linear-gradient(135deg,var(--ink-2),#1b2030)}
   .tile .cap{position:absolute;inset:auto 0 0 0;padding:.7rem;font-size:.8rem;font-weight:600;background:linear-gradient(transparent,rgba(0,0,0,.8));opacity:0;transition:opacity .2s}
   .tile:hover .cap{opacity:1}
-  .ig-posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-  .ig-posts blockquote{margin:0!important;min-width:0!important}
+  .ig-wrap{position:relative}
+  .ig-posts{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:.6rem;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+  .ig-posts>.instagram-media{flex:0 0 min(320px,82vw)!important;width:min(320px,82vw)!important;min-width:0!important;max-width:min(320px,82vw)!important;margin:0!important;scroll-snap-align:start;border-radius:10px!important}
+  .ig-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
+  .ig-head h3{margin:0}
+  .arrows{display:flex;gap:.5rem}
+  .arrows button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--ink);color:#fff;font-size:1.1rem;cursor:pointer}
+  .arrows button:hover{border-color:var(--gold);color:var(--gold)}
   .panel{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem}
   .panel h3{font-size:1rem;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
-  .fb-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1.2rem;padding:2.5rem 1.2rem;border-radius:10px;background:linear-gradient(160deg,var(--navy-deep),var(--ink-2))}
-  .fb-card p{color:#c9cfe8;max-width:260px}
+  .fb-card{display:flex;align-items:center;gap:1.4rem;padding:1.4rem 1.6rem;border-radius:10px;background:linear-gradient(160deg,var(--navy-deep),var(--ink-2))}
+  .fb-card p{color:#c9cfe8;flex:1}
+  .fb-card .logo{width:64px;height:auto}
+  @media (max-width:640px){.fb-card{flex-direction:column;text-align:center}}
   .social-cta{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.2rem}
   @media (max-width:960px){.social-grid{grid-template-columns:1fr}}
   @media (max-width:520px){.gallery{grid-template-columns:repeat(2,1fr)}}
@@ -294,7 +304,8 @@
       <div class="social-grid">
         <div>
           <div class="panel">
-            <h3><svg width="18" height="18" fill="none" stroke="#fcc63c" stroke-width="2"><rect x="2" y="2" width="14" height="14" rx="4"/><circle cx="9" cy="9" r="3.2"/></svg> Instagram · @falcon_elite_track</h3>
+            <div class="ig-head"><h3><svg width="18" height="18" fill="none" stroke="#fcc63c" stroke-width="2"><rect x="2" y="2" width="14" height="14" rx="4"/><circle cx="9" cy="9" r="3.2"/></svg> Instagram · @falcon_elite_track</h3>
+              <div class="arrows" id="igArrows" hidden><button type="button" aria-label="Previous posts" data-dir="-1">‹</button><button type="button" aria-label="More posts" data-dir="1">›</button></div></div>
             <div id="igPosts" class="ig-posts" hidden></div>
             <div id="gallery" class="gallery"></div>
           </div>
@@ -444,6 +455,8 @@ const PHOTOS = [
   const IG = "https://www.instagram.com/falcon_elite_track/";
   if (INSTAGRAM_POSTS.length){
     ig.hidden = false; g.hidden = true;
+    const ar = document.getElementById('igArrows'); ar.hidden = false;
+    ar.querySelectorAll('button').forEach(b => b.addEventListener('click', () => ig.scrollBy({left: b.dataset.dir * 336, behavior:'smooth'})));
     ig.innerHTML = INSTAGRAM_POSTS.map(u => `<blockquote class="instagram-media" data-instgrm-permalink="${u}" data-instgrm-version="14"><a href="${u}">View this post on Instagram</a></blockquote>`).join('');
     const s = document.createElement('script'); s.async = true; s.src = "https://www.instagram.com/embed.js"; document.body.appendChild(s);
     return;
