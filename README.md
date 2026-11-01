@@ -1,6 +1,6 @@
 # Falcon Elite Track Club
 
-Website for Falcon Elite, a Maryland youth track & field and cross country club.
+Website for Falcon Elite, a Maryland youth track & field club.
 
 - Live site: https://falcon-elite.github.io/website/
 - Instagram: https://www.instagram.com/falcon_elite_track/
